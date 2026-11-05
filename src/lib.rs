@@ -7,14 +7,14 @@ use std::fmt;
 
 /// Errors produced by this component. Fail-fast: errors are returned, not panicked.
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub enum Sigmaos_archbbsError {
+pub enum ArchbbsError {
     /// The requested operation is not valid in the current state.
     InvalidState,
     /// Input failed validation.
     InvalidInput(String),
 }
 
-impl fmt::Display for Sigmaos_archbbsError {
+impl fmt::Display for ArchbbsError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::InvalidState => write!(f, "invalid state"),
@@ -23,20 +23,20 @@ impl fmt::Display for Sigmaos_archbbsError {
     }
 }
 
-impl std::error::Error for Sigmaos_archbbsError {}
+impl std::error::Error for ArchbbsError {}
 
 /// Core component type. Holds configuration; performs no I/O by default.
 #[derive(Debug, Clone, Default)]
-pub struct Sigmaos_archbbs {
+pub struct Archbbs {
     name: String,
 }
 
-impl Sigmaos_archbbs {
+impl Archbbs {
     /// Create a new component instance. Fails fast on empty names.
-    pub fn new(name: impl Into<String>) -> Result<Self, Sigmaos_archbbsError> {
+    pub fn new(name: impl Into<String>) -> Result<Self, ArchbbsError> {
         let name = name.into();
         if name.trim().is_empty() {
-            return Err(Sigmaos_archbbsError::InvalidInput("name must not be empty".into()));
+            return Err(ArchbbsError::InvalidInput("name must not be empty".into()));
         }
         Ok(Self { name })
     }
@@ -47,9 +47,9 @@ impl Sigmaos_archbbs {
     }
 
     /// Perform the component's primary action. Returns a deterministic result.
-    pub fn run(&self) -> Result<String, Sigmaos_archbbsError> {
+    pub fn run(&self) -> Result<String, ArchbbsError> {
         if self.name.is_empty() {
-            return Err(Sigmaos_archbbsError::InvalidState);
+            return Err(ArchbbsError::InvalidState);
         }
         Ok(format!("{}: ok", self.name))
     }
@@ -62,18 +62,18 @@ mod tests {
     #[test]
     fn new_rejects_empty_name() {
         // Arrange / Act / Assert
-        assert!(matches!(Sigmaos_archbbs::new("  "), Err(Sigmaos_archbbsError::InvalidInput(_))));
+        assert!(matches!(Archbbs::new("  "), Err(ArchbbsError::InvalidInput(_))));
     }
 
     #[test]
     fn run_returns_deterministic_result() {
-        let c = Sigmaos_archbbs::new("test").unwrap();
+        let c = Archbbs::new("test").unwrap();
         assert_eq!(c.run().unwrap(), "test: ok");
     }
 
     #[test]
     fn name_is_accessible() {
-        let c = Sigmaos_archbbs::new("abc").unwrap();
+        let c = Archbbs::new("abc").unwrap();
         assert_eq!(c.name(), "abc");
     }
 }
