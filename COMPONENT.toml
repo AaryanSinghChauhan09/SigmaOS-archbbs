@@ -3,7 +3,7 @@ name = "SigmaOS-archbbs"
 tier = 2
 stability = "scaffold"
 language = "rust"
-description = "archbbs component"
+description = "SigmaOS archbbs component (Arch Linux inspired)"
 upstream = []
 
 [contract]
